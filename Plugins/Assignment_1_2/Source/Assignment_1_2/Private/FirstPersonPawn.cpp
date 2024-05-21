@@ -25,7 +25,7 @@ AFirstPersonPawn::AFirstPersonPawn()
 	FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingPawnMovement"));
 
 	
-	FPPPawnAttributes = LoadObject<UPawnAttributeAsset>(this, TEXT("/Script/Assignment_1_2.PawnAttributeAsset'/Game/Blueprints/FPP_Properties.FPP_Properties'"));
+	FPPPawnAttributes = LoadObject<UPawnAttributeAsset>(this, TEXT("/Script/Assignment_1_2.PawnAttributeAsset'/Assignment_1_2/Assignment2/FPP_Attributes.FPP_Attributes'"));
 }
 
 // Called when the game starts or when spawned

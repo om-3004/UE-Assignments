@@ -18,7 +18,7 @@ void ADynamicPawnController::Spawn() {
 		GetPawn()->Destroy();
 	}
 
-	UDataTable* dataTable = LoadObject<UDataTable>(this, TEXT("/Script/Engine.DataTable'/Game/Blueprints/PawnSelection.PawnSelection'"));
+	UDataTable* dataTable = LoadObject<UDataTable>(this, TEXT("/Script/Engine.DataTable'/Assignment_1_2/Assignment2/PawnSelection.PawnSelection'"));
 	if (dataTable) {
 		TArray<FName> rowNames = dataTable->GetRowNames();
 
