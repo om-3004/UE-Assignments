@@ -27,18 +27,18 @@
 
 //UENUM(Blueprintable)
 UENUM()
-enum class EPawnType {
+enum class EPawnType2 :uint8 {
 	ThirdPerson,
 	FirstPerson,
 	TopDown
 };
 
 USTRUCT(Blueprintable)
-struct FPawnDataTable: public FTableRowBase {
+struct FPawnDataTable2: public FTableRowBase {
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
-	EPawnType PawnType{};
+	EPawnType2 PawnType{};
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<APawn> PawnClass{};

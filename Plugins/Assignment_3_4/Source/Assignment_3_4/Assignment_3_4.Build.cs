@@ -25,7 +25,7 @@ public class Assignment_3_4 : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-                "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "NavigationSystem", "AIModule", "Niagara", "EnhancedInput", "UnrealAssignments"
+                "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "NavigationSystem", "AIModule", "Niagara", "EnhancedInput", "UnrealAssignments", "UMG"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);

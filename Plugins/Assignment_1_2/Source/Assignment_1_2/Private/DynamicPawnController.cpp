@@ -26,7 +26,7 @@ void ADynamicPawnController::Spawn() {
 			indexOfDataTable = 0;
 		}
 
-		FPawnDataTable* dataRow = dataTable->FindRow<FPawnDataTable>(rowNames[indexOfDataTable++], TEXT(""));
+		FPawnDataTable2* dataRow = dataTable->FindRow<FPawnDataTable2>(rowNames[indexOfDataTable++], TEXT(""));
 
 		UWorld* World = GetWorld();
 
@@ -50,14 +50,14 @@ void ADynamicPawnController::Spawn() {
 				if (SpawnedPawn) {
 					Possess(SpawnedPawn);
 
-					if (dataRow->PawnType == EPawnType::FirstPerson) {
+					if (dataRow->PawnType == EPawnType2::FirstPerson) {
 						DisplayAttributes(Cast<AFirstPersonPawn>(SpawnedPawn)->FPPPawnAttributes);
 					}
 					else {
 						DisplayAttributes(Cast<ABaseCharacter>(SpawnedPawn)->TopDownTPPAttributes);
 					}
 
-					if (dataRow->PawnType == EPawnType::TopDown) {
+					if (dataRow->PawnType == EPawnType2::TopDown) {
 						bShowMouseCursor = true;
 						bEnableClickEvents = true;
 						bEnableMouseOverEvents = true;
