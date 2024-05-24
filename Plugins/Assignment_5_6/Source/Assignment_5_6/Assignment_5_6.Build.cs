@@ -25,8 +25,8 @@ public class Assignment_5_6 : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-                "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "NavigationSystem", "AIModule", "Niagara", "EnhancedInput", "UnrealAssignments", "UMG"
-			}
+                "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "NavigationSystem", "AIModule", "Niagara", "EnhancedInput", "UnrealAssignments", "UMG", "ProceduralMeshComponent"
+            }
 			);
 			
 		
