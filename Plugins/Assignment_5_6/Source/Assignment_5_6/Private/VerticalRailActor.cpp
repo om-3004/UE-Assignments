@@ -72,11 +72,19 @@ void AVerticalRailActor::GenerateFenceRailing(ERailingType& FenceRailing)
 		GenerateBellShape(SectionIdx, 5, 2, 1.5, 1, 10, 10);
 		GenerateOval(SectionIdx, 8, 25, 25);
 		break;
+	case ERailingType::GothicStarTop:
+		GenerateCube(SectionIdx, { 10, 10, 1 }, { 0, 0, 100.5 });
+		GenerateCubePyramid(SectionIdx, { 15, 15, 10 }, {0, 0, 106});
+		GenerateSidePyramidsLeft(SectionIdx, {7.5, 15, 10}, {3.75, 0, 116});
+		GenerateSidePyramidsRight(SectionIdx, {7.5, 15, 10}, {-3.75, 0, 116});
+		break;
 	case ERailingType::PyramidTop:
 		GenerateCube(SectionIdx, { 10, 10, 1 }, { 0, 0, 100.5 });
-		GenerateCubePyramid(SectionIdx, {15, 15, 10});
+		GenerateCube(SectionIdx, { 15, 15, 10 }, { 0, 0, 106 });
+		GeneratePyramid(SectionIdx, {15, 15, 10}, {0, 0, 116});
 		break;
 	}
+	SectionIdx = 0;
 }
 
 void AVerticalRailActor::GenerateCube(int32& SectionIndex, const FVector& Dimensions, const FVector& LocationOffset)
@@ -199,11 +207,7 @@ void AVerticalRailActor::GenerateSphere(int32& SectionIndex, const float& Radius
 	ProceduralMeshComponent->CreateMeshSection_LinearColor(SectionIndex++, Vertices, Triangles, Normals, UVs, Colors, Tangents, true);
 }
 
-int AVerticalRailActor::AddNewVertexCubePyramid(const FVector& VertexCordinates) {
-	return Vertices.Add(VertexCordinates + FVector(0, 0, 106));
-}
-
-void AVerticalRailActor::GenerateCubePyramid(int32& SectionIndex, const FVector& Dimensions)
+void AVerticalRailActor::GenerateCubePyramid(int32& SectionIndex, const FVector& Dimensions, const FVector& LocationOffset)
 {
 	Vertices.Reset();
 	Triangles.Reset();
@@ -213,58 +217,60 @@ void AVerticalRailActor::GenerateCubePyramid(int32& SectionIndex, const FVector&
 	Colors.Reset();
 
 	// Bottom Face
-	AddNewVertexCubePyramid(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 }); // 0 - - -
-	AddNewVertexCubePyramid(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 }); // 1 - + -
-	AddNewVertexCubePyramid(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 }); // 2 + - -
-	AddNewVertexCubePyramid(FVector{ Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 }); // 3 + + -
+	AddNewVertex(FVector{ Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 0 - - -
+	AddNewVertex(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 1 - + -
+	AddNewVertex(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 2 + - -
+	AddNewVertex(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 3 + + -
 
 	// Front Face
-	AddNewVertexCubePyramid(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 }); // 4 - - - 0
-	AddNewVertexCubePyramid(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 }); // 5 - + - 1
-	AddNewVertexCubePyramid(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 }); // 6 - - + 4
-	AddNewVertexCubePyramid(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 }); // 7 - + + 5
+	AddNewVertex(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 4 - - - 0
+	AddNewVertex(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 5 - + - 1
+	AddNewVertex(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 6 - - + 4
+	AddNewVertex(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 7 - + + 5
 
 	// Back Face
-	AddNewVertexCubePyramid(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 }); // 8 + - - 2
-	AddNewVertexCubePyramid(FVector{ Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 }); // 9 + + - 3
-	AddNewVertexCubePyramid(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 }); // 10 + - + 6
-	AddNewVertexCubePyramid(FVector{ Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 }); // 11 + + + 7
+	AddNewVertex(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 8 + - - 2
+	AddNewVertex(FVector{ Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 9 + + - 3
+	AddNewVertex(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 10 + - + 6
+	AddNewVertex(FVector{ Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 11 + + + 7
 
 	// Left Face
-	AddNewVertexCubePyramid(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 }); // 12 + - - 2
-	AddNewVertexCubePyramid(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 }); // 13 - - - 0
-	AddNewVertexCubePyramid(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 }); // 14 + - + 6
-	AddNewVertexCubePyramid(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 }); // 15 - - + 4
+	AddNewVertex(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 12 + - - 2
+	AddNewVertex(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 13 - - - 0
+	AddNewVertex(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 14 + - + 6
+	AddNewVertex(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 15 - - + 4
 
 	// Right Face
-	AddNewVertexCubePyramid(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 }); // 16 + + - 3
-	AddNewVertexCubePyramid(FVector{ Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 }); // 17 - + - 1
-	AddNewVertexCubePyramid(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 }); // 18 + + + 7
-	AddNewVertexCubePyramid(FVector{ Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 }); // 19 - + + 5
+	AddNewVertex(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 16 + + - 3
+	AddNewVertex(FVector{ Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 17 - + - 1
+	AddNewVertex(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 18 + + + 7
+	AddNewVertex(FVector{ Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 19 - + + 5
 
 	// Triangle Front
-	AddNewVertexCubePyramid(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 }); // 20
-	AddNewVertexCubePyramid(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 }); // 21
-	AddNewVertexCubePyramid(FVector{ 0, 0, Dimensions.Z }); // 22 
+	AddNewVertex(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 20
+	AddNewVertex(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 21
+	AddNewVertex(FVector{ 0, -Dimensions.Y / 2, 3 * Dimensions.Z / 2 } + LocationOffset); // 22
 
 	// Triangle Back
-	AddNewVertexCubePyramid(FVector{ Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 }); // 23
-	AddNewVertexCubePyramid(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 }); // 24
-	AddNewVertexCubePyramid(FVector{ 0, 0, Dimensions.Z }); // 25
+	AddNewVertex(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 23
+	AddNewVertex(FVector{ Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 24
+	AddNewVertex(FVector{ 0, Dimensions.Y / 2, 3 * Dimensions.Z / 2 } + LocationOffset); // 25
 
-	// Triangle Left
-	AddNewVertexCubePyramid(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 }); // 26
-	AddNewVertexCubePyramid(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 }); // 27
-	AddNewVertexCubePyramid(FVector{ 0, 0, Dimensions.Z }); // 28
+	// Plane Left
+	AddNewVertex(FVector{ Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 26 - Bottom Left
+	AddNewVertex(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 27 - Bottom Right
+	AddNewVertex(FVector{ 0, Dimensions.Y / 2, 3 * Dimensions.Z / 2 } + LocationOffset); // 28 - Top Left
+	AddNewVertex(FVector{ 0, -Dimensions.Y / 2, 3 * Dimensions.Z / 2 } + LocationOffset); // 29 - Top Right
 
-	// Triangle Right
-	AddNewVertexCubePyramid(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 }); // 29
-	AddNewVertexCubePyramid(FVector{ Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 }); // 30
-	AddNewVertexCubePyramid(FVector{ 0, 0, Dimensions.Z }); // 31
+	// Plane Right
+	AddNewVertex(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 30 - Bottom Left
+	AddNewVertex(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 31 - Bottom Right
+	AddNewVertex(FVector{ 0, -Dimensions.Y / 2, 3 * Dimensions.Z / 2 } + LocationOffset); // 32 - Top Left
+	AddNewVertex(FVector{ 0, Dimensions.Y / 2, 3 * Dimensions.Z / 2 } + LocationOffset); // 33 - Top Right
 
 	// Bottom Face Triangle
-	DrawTriangleFromVertex(2, 3, 0);
-	DrawTriangleFromVertex(3, 1, 0);
+	DrawTriangleFromVertex(0, 1, 2);
+	DrawTriangleFromVertex(1, 3, 2);
 
 	// Front Face Triangle
 	DrawTriangleFromVertex(4, 5, 6);
@@ -288,11 +294,13 @@ void AVerticalRailActor::GenerateCubePyramid(int32& SectionIndex, const FVector&
 	// Triangle Back
 	DrawTriangleFromVertex(23, 24, 25);
 
-	// Triangle Left
+	// Plane Left
 	DrawTriangleFromVertex(26, 27, 28);
+	DrawTriangleFromVertex(27, 29, 28);
 
-	// Triangle Right
-	DrawTriangleFromVertex(29, 30, 31);
+	// Plane Right
+	DrawTriangleFromVertex(30, 31, 32);
+	DrawTriangleFromVertex(31, 33, 32);
 
 	for (int32 i = 0; i < 20; i += 4) {
 		AddUV(FVector2D{ 0.0, 1.0 });
@@ -301,10 +309,17 @@ void AVerticalRailActor::GenerateCubePyramid(int32& SectionIndex, const FVector&
 		AddUV(FVector2D{ 1.0, 0.0 });
 	}
 
-	for (int32 i = 20; i < 32; i += 3) {
+	for (int32 i = 20; i < 26; i += 3) {
 		AddUV(FVector2D{ 0.0, 0.0 });
 		AddUV(FVector2D{ 1.0, 0.0 });
 		AddUV(FVector2D{ 0.0, 1.0 });
+	}
+
+	for (int32 i = 26; i < 33; i += 4) {
+		AddUV(FVector2D{ 0.0, 1.0 });
+		AddUV(FVector2D{ 1.0, 1.0 });
+		AddUV(FVector2D{ 0.0, 0.0 });
+		AddUV(FVector2D{ 1.0, 0.0 });
 	}
 
 	Normals.Add({ 0.0, 0.0, -1.0 });
@@ -315,8 +330,9 @@ void AVerticalRailActor::GenerateCubePyramid(int32& SectionIndex, const FVector&
 
 	Normals.Add(FVector::CrossProduct(Vertices[20], Vertices[21]));
 	Normals.Add(FVector::CrossProduct(Vertices[23], Vertices[24]));
+	
 	Normals.Add(FVector::CrossProduct(Vertices[26], Vertices[27]));
-	Normals.Add(FVector::CrossProduct(Vertices[29], Vertices[30]));
+	Normals.Add(FVector::CrossProduct(Vertices[30], Vertices[31]));
 
 	ProceduralMeshComponent->CreateMeshSection_LinearColor(SectionIndex++, Vertices, Triangles, Normals, UVs, Colors, Tangents, true);
 }
@@ -501,5 +517,230 @@ void AVerticalRailActor::GenerateOval(int32& SectionIndex, const float& Radius, 
 			}
 		}
 	}
+	ProceduralMeshComponent->CreateMeshSection_LinearColor(SectionIndex++, Vertices, Triangles, Normals, UVs, Colors, Tangents, true);
+}
+
+void AVerticalRailActor::GeneratePyramid(int32& SectionIndex, const FVector& Dimensions, const FVector& LocationOffset) {
+
+	Vertices.Reset();
+	Triangles.Reset();
+	Normals.Reset();
+	UVs.Reset();
+	Tangents.Reset();
+	Colors.Reset();
+
+	// Bottom Face
+	AddNewVertex(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 0 - - -
+	AddNewVertex(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 1 - + -
+	AddNewVertex(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 2 + - -
+	AddNewVertex(FVector{ Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 3 + + -
+
+	// Triangle Front
+	AddNewVertex(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 4
+	AddNewVertex(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 5
+	AddNewVertex(FVector{ 0, 0, Dimensions.Z / 2 } + LocationOffset); // 6 
+
+	// Triangle Back
+	AddNewVertex(FVector{ Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 7
+	AddNewVertex(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 8
+	AddNewVertex(FVector{ 0, 0, Dimensions.Z / 2 } + LocationOffset); // 9
+
+	// Triangle Left
+	AddNewVertex(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 10
+	AddNewVertex(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 11
+	AddNewVertex(FVector{ 0, 0, Dimensions.Z / 2 } + LocationOffset); // 12
+
+	// Triangle Right
+	AddNewVertex(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 13
+	AddNewVertex(FVector{ Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 14
+	AddNewVertex(FVector{ 0, 0, Dimensions.Z / 2 } + LocationOffset); // 15
+
+	DrawTriangleFromVertex(2, 3, 0);
+	DrawTriangleFromVertex(3, 1, 0);
+
+	// Triangle Front
+	DrawTriangleFromVertex(4, 5, 6);
+
+	// Triangle Back
+	DrawTriangleFromVertex(7, 8, 9);
+
+	// Triangle Left
+	DrawTriangleFromVertex(10, 11, 12);
+
+	// Triangle Right
+	DrawTriangleFromVertex(13, 14, 15);
+
+	AddUV(FVector2D{ 0.0, 1.0 });
+	AddUV(FVector2D{ 1.0, 1.0 });
+	AddUV(FVector2D{ 0.0, 0.0 });
+	AddUV(FVector2D{ 1.0, 0.0 });
+
+	for (int32 i = 4; i < 16; i += 3) {
+		AddUV(FVector2D{ 0.0, 0.0 });
+		AddUV(FVector2D{ 1.0, 0.0 });
+		AddUV(FVector2D{ 0.0, 1.0 });
+	}
+
+	Normals.Add({ 0.0, 0.0, -1.0 });
+
+	Normals.Add(FVector::CrossProduct(Vertices[4], Vertices[5]));
+	Normals.Add(FVector::CrossProduct(Vertices[7], Vertices[8]));
+	Normals.Add(FVector::CrossProduct(Vertices[10], Vertices[11]));
+	Normals.Add(FVector::CrossProduct(Vertices[13], Vertices[14]));
+
+	ProceduralMeshComponent->CreateMeshSection_LinearColor(SectionIndex++, Vertices, Triangles, Normals, UVs, Colors, Tangents, true);
+}
+
+void AVerticalRailActor::GenerateSidePyramidsLeft(int32& SectionIndex, const FVector& Dimensions, const FVector& LocationOffset) {
+	Vertices.Reset();
+	Triangles.Reset();
+	Normals.Reset();
+	UVs.Reset();
+	Tangents.Reset();
+	Colors.Reset();
+
+	// Right Face - Left Side - Hypotenuse
+	AddNewVertex(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 0 - Bottom Left
+	AddNewVertex(FVector{ Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 1 - Bottom Right
+	AddNewVertex(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 2 - Top Left
+	AddNewVertex(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 3 - Top Right
+
+	// Left Face - Left Side
+	AddNewVertex(FVector{ Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 4 - Bottom Left
+	AddNewVertex(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 5 - Bottom Right
+	AddNewVertex(FVector{ Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 6 - Top Left
+	AddNewVertex(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 7 - Top Right
+
+	// Top Face - Left Side
+	AddNewVertex(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 8 - Bottom Left
+	AddNewVertex(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 9 - Bottom Right
+	AddNewVertex(FVector{ Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 10 - Top Left
+	AddNewVertex(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 11 - Top Right
+
+	// Front Triangle
+	AddNewVertex(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 12 - Bottom
+	AddNewVertex(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 13 - Top Right
+	AddNewVertex(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 14 - Top Left
+
+	// Back Triangle
+	AddNewVertex(FVector{ Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 15 - Bottom
+	AddNewVertex(FVector{ Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 16 - Top Right
+	AddNewVertex(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 17 - Top Left
+
+	// Hypotenuse Triangle
+	DrawTriangleFromVertex(0, 1, 2);
+	DrawTriangleFromVertex(1, 3, 2);
+
+	// Left Face Triangle
+	DrawTriangleFromVertex(4, 5, 6);
+	DrawTriangleFromVertex(5, 7, 6);
+
+	// Top Face Triangle
+	DrawTriangleFromVertex(8, 9, 10);
+	DrawTriangleFromVertex(9, 11, 10);
+
+	// Front Triangle
+	DrawTriangleFromVertex(12, 13, 14);
+
+	// Back Triangle
+	DrawTriangleFromVertex(15, 16, 17);
+
+	for (int32 i = 0; i < 12; i += 4) {
+		AddUV(FVector2D{ 0.0, 1.0 });
+		AddUV(FVector2D{ 1.0, 1.0 });
+		AddUV(FVector2D{ 0.0, 0.0 });
+		AddUV(FVector2D{ 1.0, 0.0 });
+	}
+
+	for (int32 i = 0; i < 18; i += 3) {
+		AddUV(FVector2D{ 0.0, 0.0 });
+		AddUV(FVector2D{ 1.0, 0.0 });
+		AddUV(FVector2D{ 0.0, 1.0 });
+	}
+
+	Normals.Add(FVector::CrossProduct(Vertices[0], Vertices[1]));
+	Normals.Add({ 1.0, 0.0, 0.0 });
+	Normals.Add({ 0.0, 0.0, 1.0 });
+
+	Normals.Add({ 0.0, -1.0, 0.0 });
+	Normals.Add({ 0.0, 1.0, 0.0 });
+
+	ProceduralMeshComponent->CreateMeshSection_LinearColor(SectionIndex++, Vertices, Triangles, Normals, UVs, Colors, Tangents, true);
+}
+
+void AVerticalRailActor::GenerateSidePyramidsRight(int32& SectionIndex, const FVector& Dimensions, const FVector& LocationOffset) {
+	Vertices.Reset();
+	Triangles.Reset();
+	Normals.Reset();
+	UVs.Reset();
+	Tangents.Reset();
+	Colors.Reset();
+
+	// Left Face - Right Side - Hypotenuse
+	AddNewVertex(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 0 - Bottom Left
+	AddNewVertex(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 1 - Bottom Right
+	AddNewVertex(FVector{ Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 2 - Top Left
+	AddNewVertex(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 3 - Top Right
+
+	// Right Face - Right Side
+	AddNewVertex(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 4 - Bottom Left
+	AddNewVertex(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 5 - Bottom Right
+	AddNewVertex(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 6 - Top Left
+	AddNewVertex(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 7 - Top Right
+
+	// Top Face - Left Side
+	AddNewVertex(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 8 - Bottom Left
+	AddNewVertex(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 9 - Bottom Right
+	AddNewVertex(FVector{ Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 10 - Top Left
+	AddNewVertex(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 11 - Top Right
+
+	// Front Triangle
+	AddNewVertex(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 12 - Bottom
+	AddNewVertex(FVector{ -Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 13 - Top Right
+	AddNewVertex(FVector{ Dimensions.X / 2, -Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 14 - Top Left
+
+	// Back Triangle
+	AddNewVertex(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, -Dimensions.Z / 2 } + LocationOffset); // 15 - Bottom
+	AddNewVertex(FVector{ Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 16 - Top Right
+	AddNewVertex(FVector{ -Dimensions.X / 2, Dimensions.Y / 2, Dimensions.Z / 2 } + LocationOffset); // 17 - Top Left
+
+	// Hypotenuse Triangle
+	DrawTriangleFromVertex(0, 1, 2);
+	DrawTriangleFromVertex(1, 3, 2);
+
+	// Left Face Triangle
+	DrawTriangleFromVertex(4, 5, 6);
+	DrawTriangleFromVertex(5, 7, 6);
+
+	// Top Face Triangle
+	DrawTriangleFromVertex(8, 9, 10);
+	DrawTriangleFromVertex(9, 11, 10);
+
+	// Front Triangle
+	DrawTriangleFromVertex(12, 13, 14);
+
+	// Back Triangle
+	DrawTriangleFromVertex(15, 16, 17);
+
+	for (int32 i = 0; i < 12; i += 4) {
+		AddUV(FVector2D{ 0.0, 1.0 });
+		AddUV(FVector2D{ 1.0, 1.0 });
+		AddUV(FVector2D{ 0.0, 0.0 });
+		AddUV(FVector2D{ 1.0, 0.0 });
+	}
+
+	for (int32 i = 0; i < 18; i += 3) {
+		AddUV(FVector2D{ 0.0, 0.0 });
+		AddUV(FVector2D{ 1.0, 0.0 });
+		AddUV(FVector2D{ 0.0, 1.0 });
+	}
+
+	Normals.Add(FVector::CrossProduct(Vertices[0], Vertices[1]));
+	Normals.Add({ -1.0, 0.0, 0.0 });
+	Normals.Add({ 0.0, 0.0, 1.0 });
+
+	Normals.Add({ 0.0, -1.0, 0.0 });
+	Normals.Add({ 0.0, 1.0, 0.0 });
+
 	ProceduralMeshComponent->CreateMeshSection_LinearColor(SectionIndex++, Vertices, Triangles, Normals, UVs, Colors, Tangents, true);
 }

@@ -13,6 +13,7 @@ enum class ERailingType {
 	WindsorTurnedCapital,
 	RoundTurnedCapital,
 	AcornCapital,
+	GothicStarTop,
 	PyramidTop,
 };
 
@@ -62,11 +63,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
-	int AddNewVertex(const FVector& VertexCordinates);
-
-	// TOP PYRAMID
-	UFUNCTION()
-	int AddNewVertexCubePyramid(const FVector& VertexCordinates);
+	int AddNewVertex(const FVector& VertexCordinates);	
 
 	UFUNCTION()
 	int AddUV(const FVector2D& UVCordinates);
@@ -84,7 +81,13 @@ public:
 	void GenerateSphere(int32& SectionIndex, const float& Radius, const int32& RingCount, const int32& PointCount);
 
 	UFUNCTION(BlueprintCallable, Category = "Defaults")
-	void GenerateCubePyramid(int32& SectionIndex, const FVector& Dimesions);
+	void GenerateCubePyramid(int32& SectionIndex, const FVector& Dimesions, const FVector& LocationOffset);
+	
+	UFUNCTION(BlueprintCallable, Category = "Defaults")
+	void GenerateSidePyramidsLeft(int32& SectionIndex, const FVector& Dimesions, const FVector& LocationOffset);
+
+	UFUNCTION(BlueprintCallable, Category = "Defaults")
+	void GenerateSidePyramidsRight(int32& SectionIndex, const FVector& Dimesions, const FVector& LocationOffset);
 
 	UFUNCTION(BlueprintCallable, Category = "Defaults")
 	void GenerateBellShape(int32& SectionIndex, float BaseRadius, float Height1, float RimRadius, float CurvatureFactor, int NumSlices, int NumStacks);
@@ -94,4 +97,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Defaults")
 	void GenerateOval(int32& SectionIndex, const float& Radius, const int32& RingCount, const int32& PointCount);
+
+	UFUNCTION(BlueprintCallable, Category = "Defaults")
+	void GeneratePyramid(int32& SectionIndex, const FVector& Dimensions, const FVector& LocationOffset);
 };
