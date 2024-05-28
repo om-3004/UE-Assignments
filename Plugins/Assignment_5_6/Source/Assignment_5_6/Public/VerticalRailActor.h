@@ -14,6 +14,8 @@ enum class ERailingType {
 	RoundTurnedCapital,
 	AcornCapital,
 	GothicStarTop,
+	RoundedOverTop,
+	RoundedStarTop,
 	PyramidTop,
 };
 
@@ -78,7 +80,7 @@ public:
 	void GenerateCube(int32& SectionIndex, const FVector& Dimesions, const FVector& LocationOffset);
 
 	UFUNCTION(BlueprintCallable, Category = "Defaults")
-	void GenerateSphere(int32& SectionIndex, const float& Radius, const int32& RingCount, const int32& PointCount);
+	void GenerateSphere(int32& SectionIndex, const float& Radius, const int32& RingCount, const int32& PointCount, const FVector& LocationOffset);
 
 	UFUNCTION(BlueprintCallable, Category = "Defaults")
 	void GenerateCubePyramid(int32& SectionIndex, const FVector& Dimesions, const FVector& LocationOffset);
@@ -90,14 +92,23 @@ public:
 	void GenerateSidePyramidsRight(int32& SectionIndex, const FVector& Dimesions, const FVector& LocationOffset);
 
 	UFUNCTION(BlueprintCallable, Category = "Defaults")
-	void GenerateBellShape(int32& SectionIndex, float BaseRadius, float Height1, float RimRadius, float CurvatureFactor, int NumSlices, int NumStacks);
+	void GenerateBellShape(int32& SectionIndex, float BaseRadius, float Height1, float RimRadius, float CurvatureFactor, int NumSlices, int NumStacks, const FVector& LocationOffset);
 
 	UFUNCTION(BlueprintCallable, Category = "Defaults")
-	void GenerateCurvedCone(int32& SectionIndex, const int32& NumSegments, const int32& NumRings, const int32& Radius, const int32& Height);
+	void GenerateCurvedCone(int32& SectionIndex, const int32& NumSegments, const int32& NumRings, const int32& Radius, const int32& Height, const FVector& LocationOffset);
 	
 	UFUNCTION(BlueprintCallable, Category = "Defaults")
-	void GenerateOval(int32& SectionIndex, const float& Radius, const int32& RingCount, const int32& PointCount);
+	void GenerateOval(int32& SectionIndex, const float& Radius, const int32& RingCount, const int32& PointCount, const FVector& LocationOffset);
 
 	UFUNCTION(BlueprintCallable, Category = "Defaults")
 	void GeneratePyramid(int32& SectionIndex, const FVector& Dimensions, const FVector& LocationOffset);
+
+	UFUNCTION(BlueprintCallable, Category = "Defaults")
+	void GenerateHemiSphere(int32& SectionIndex, const float& Radius, const int32& RingCount, const int32& PointCount, const FVector& LocationOffset);
+
+	UFUNCTION(BlueprintCallable, Category = "Defaults")
+	void GenerateCylinder(int32& SectionIndex, const float& Radius, const float& Height, const int32& Segments, const FVector& LocationOffset);
+
+	UFUNCTION(BlueprintCallable, Category = "Defaults")
+	void GenerateSemiCircle(int32& SectionIndex, const float& Radius, bool isNegativeside, const FVector& LocationOffset);
 };
