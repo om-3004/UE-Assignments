@@ -86,10 +86,10 @@ public:
 	void GenerateCubePyramid(int32& SectionIndex, const FVector& Dimesions, const FVector& LocationOffset);
 	
 	UFUNCTION(BlueprintCallable, Category = "Defaults")
-	void GenerateSidePyramidsLeft(int32& SectionIndex, const FVector& Dimesions, const FVector& LocationOffset);
+	void GenerateSideTriangleLeft(int32& SectionIndex, const FVector& Dimesions, const FVector& LocationOffset);
 
 	UFUNCTION(BlueprintCallable, Category = "Defaults")
-	void GenerateSidePyramidsRight(int32& SectionIndex, const FVector& Dimesions, const FVector& LocationOffset);
+	void GenerateSideTriangleRight(int32& SectionIndex, const FVector& Dimesions, const FVector& LocationOffset);
 
 	UFUNCTION(BlueprintCallable, Category = "Defaults")
 	void GenerateBellShape(int32& SectionIndex, float BaseRadius, float Height1, float RimRadius, float CurvatureFactor, int NumSlices, int NumStacks, const FVector& LocationOffset);
@@ -99,6 +99,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Defaults")
 	void GenerateOval(int32& SectionIndex, const float& Radius, const int32& RingCount, const int32& PointCount, const FVector& LocationOffset);
+
+	UFUNCTION(BlueprintCallable, Category = "Defaults")
+	void GenerateDonut(int32& SectionIndex, float OuterRadius, float InnerRadius, int NumSegments, int NumSides, const FVector& LocationOffset);
 
 	UFUNCTION(BlueprintCallable, Category = "Defaults")
 	void GeneratePyramid(int32& SectionIndex, const FVector& Dimensions, const FVector& LocationOffset);
@@ -111,4 +114,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Defaults")
 	void GenerateSemiCircle(int32& SectionIndex, const float& Radius, bool isNegativeside, const FVector& LocationOffset);
+
+	UFUNCTION(BlueprintCallable, Category = "Defaults")
+	void GenerateSideCurvedTriangleLeft(int32& SectionIndex, const float& Radius, const float& Height, const int32& Segments, const FVector& LocationOffset);
+
+	UFUNCTION(BlueprintCallable, Category = "Defaults")
+	void GenerateSideCurvedTriangleRight(int32& SectionIndex, const float& Radius, const float& Height, const int32& Segments, const FVector& LocationOffset);
 };
