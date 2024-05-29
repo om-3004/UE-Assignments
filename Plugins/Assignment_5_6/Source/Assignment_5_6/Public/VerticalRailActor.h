@@ -74,7 +74,7 @@ public:
 	void DrawTriangleFromVertex(int32 Vertex0, int32 Vertex1, int32 Vertex2);
 
 	UFUNCTION(BlueprintCallable, Category = "Defaults")
-	void GenerateFenceRailing(ERailingType& FenceRailing);
+	void GenerateFenceRailing(float length, float width, float height);
 
 	UFUNCTION(BlueprintCallable, Category = "Defaults")
 	void GenerateCube(int32& SectionIndex, const FVector& Dimesions, const FVector& LocationOffset);

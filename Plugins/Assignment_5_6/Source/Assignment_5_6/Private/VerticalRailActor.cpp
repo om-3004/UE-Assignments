@@ -30,7 +30,7 @@ void AVerticalRailActor::BeginPlay()
 void AVerticalRailActor::OnConstruction(const FTransform& FTransform)
 {
 	Super::OnConstruction(FTransform);
-	GenerateFenceRailing(Railing);
+	//GenerateFenceRailing(Railing);
 }
 
 // Called every frame
@@ -54,54 +54,56 @@ void AVerticalRailActor::DrawTriangleFromVertex(int32 Vertex0, int32 Vertex1, in
 	Triangles.Add(Vertex2);
 }
 
-void AVerticalRailActor::GenerateFenceRailing(ERailingType& FenceRailing)
+void AVerticalRailActor::GenerateFenceRailing(float length, float width, float height)
 {
-	GenerateCube(SectionIdx, { 15, 15, 200 }, { 0, 0, 0 });
+	float Diameter = (length <= width) ? length : width;
 
-	switch (FenceRailing) {
+	GenerateCube(SectionIdx, { length, width, height }, { 0, 0, 0 });
+
+	switch (Railing) {
 	case ERailingType::WindsorTurnedCapital:
-		GenerateCube(SectionIdx, { 15, 15, 2 }, { 0, 0, 101 });
-		GenerateBellShape(SectionIdx, 5, 2, 1.5, 1, 10, 10, { 0, 0, 102 });
-		GenerateSphere(SectionIdx, 8, 25, 25, { 0, 0, 112 });
-		GenerateCurvedCone(SectionIdx, 16, 16, 3, 5, { 0, 0, 118 });
+		GenerateCube(SectionIdx, { length, width, height/100 }, { 0, 0, (height/2) + (height/200) });
+		GenerateBellShape(SectionIdx, Diameter/3, height/100, Diameter/10, 1, 10, 10, { 0, 0, (height/2) + (height/100)});
+		GenerateSphere(SectionIdx, Diameter/2, 25, 25, { 0, 0, (height/2) + (height/100) + (height/100) + (Diameter/2)});
+		GenerateCurvedCone(SectionIdx, 16, 16, Diameter/5, height/40, { 0, 0, (height/2) + (height/100) + (height/100) + (height/100) + (Diameter-2)});
 		break;
 	case ERailingType::RoundTurnedCapital:
-		GenerateCube(SectionIdx, { 15, 15, 2 }, { 0, 0, 101 });
-		GenerateBellShape(SectionIdx, 5, 2, 1.5, 1, 10, 10, { 0, 0, 102 });
-		GenerateSphere(SectionIdx, 8, 25, 25, { 0, 0, 112 });
+		GenerateCube(SectionIdx, { length, width, height / 100 }, { 0, 0, (height / 2) + (height / 200) });
+		GenerateBellShape(SectionIdx, Diameter / 3, height / 100, Diameter / 10, 1, 10, 10, { 0, 0, (height / 2) + (height / 100) });
+		GenerateSphere(SectionIdx, Diameter / 2, 25, 25, { 0, 0, (height / 2) + (height / 100) + (height / 100) + (Diameter / 2) });
 		break;
 	case ERailingType::AcornCapital:
-		GenerateCube(SectionIdx, { 15, 15, 2 }, { 0, 0, 101 });
-		GenerateBellShape(SectionIdx, 5, 2, 1.5, 1, 10, 10, { 0, 0, 102 });
-		GenerateOval(SectionIdx, 8, 25, 25, { 0, 0, 115.5 });
+		GenerateCube(SectionIdx, { length, width, height / 100 }, { 0, 0, (height / 2) + (height / 200) });
+		GenerateBellShape(SectionIdx, Diameter / 3, height / 100, Diameter / 10, 1, 10, 10, { 0, 0, (height / 2) + (height / 100) });
+		GenerateOval(SectionIdx, Diameter / 2, 25, 25, { 0, 0, (height / 2) + (height / 100) + (height / 100) + (Diameter * 1.5 / 2) });
 		GenerateDonut(SectionIdx, 8, 1, 25, 25, { 0, 0, 113 });
 		break;
 	case ERailingType::GothicStarTop:
-		GenerateCube(SectionIdx, { 10, 10, 1 }, { 0, 0, 100.5 });
-		GenerateCubePyramid(SectionIdx, { 15, 15, 10 }, {0, 0, 106});
-		GenerateSideTriangleLeft(SectionIdx, {7.5, 15, 10}, {3.75, 0, 116});
-		GenerateSideTriangleRight(SectionIdx, {7.5, 15, 10}, {-3.75, 0, 116});
+		GenerateCube(SectionIdx, { (length * 2)/3, (width * 2)/3, height/200}, {0, 0, (height/2) + (height/400)});
+		GenerateCubePyramid(SectionIdx, { length, width, height/20 }, {0, 0, (height/2) + (height/200) + (height/40)});
+		GenerateSideTriangleLeft(SectionIdx, {length/2, width, height/20}, {length/4, 0, (height/2) + (height/200) + (height/20) + (height/40)});
+		GenerateSideTriangleRight(SectionIdx, { length / 2, width, height / 20 }, { -length / 4, 0, (height / 2) + (height / 200) + (height / 20) + (height / 40) });
 		break;
 	case ERailingType::RoundedOverTop:
-		GenerateCube(SectionIdx, { 10, 10, 1 }, { 0, 0, 100.5 });
-		GenerateCube(SectionIdx, { 15, 15, 10 }, { 0, 0, 106 });
-		GenerateCylinder(SectionIdx, 7.5, 15, 32, {0, 0, 111});
-		GenerateSemiCircle(SectionIdx, 7.5, 1, {0, -7.5, 111});
-		GenerateSemiCircle(SectionIdx, 7.5, 0, {0, 7.5, 111});
+		GenerateCube(SectionIdx, { (length * 2) / 3, (width * 2) / 3, height / 200 }, { 0, 0, (height / 2) + (height / 400) });
+		GenerateCube(SectionIdx, { length, width, height/20 }, { 0, 0, (height/2) + (height/200) + (height/40)});
+		GenerateCylinder(SectionIdx, length/2, width, 32, {0, 0, (height/2) + (height/200) + (height/20) });
+		GenerateSemiCircle(SectionIdx, length / 2, 1, {0, -width/2, (height / 2) + (height / 200) + (height / 20) });
+		GenerateSemiCircle(SectionIdx, length / 2, 0, {0, width/2, (height / 2) + (height / 200) + (height / 20) });
 		break;
 	case ERailingType::RoundedStarTop:
-		GenerateCube(SectionIdx, { 10, 10, 1 }, { 0, 0, 100.5 });
-		GenerateCube(SectionIdx, { 15, 15, 10 }, { 0, 0, 106 });
-		GenerateCylinder(SectionIdx, 7.5, 15, 32, { 0, 0, 111 });
-		GenerateSemiCircle(SectionIdx, 7.5, 1, { 0, -7.5, 111 });
-		GenerateSemiCircle(SectionIdx, 7.5, 0, { 0, 7.5, 111 });
-		GenerateSideCurvedTriangleLeft(SectionIdx, 7.5, 15, 32, { 0, 0, 111 });
-		GenerateSideCurvedTriangleRight(SectionIdx, 7.5, 15, 32, { 0, 0, 111 });
+		GenerateCube(SectionIdx, { (length * 2) / 3, (width * 2) / 3, height/200 }, { 0, 0, (height/2) + (height/400) });
+		GenerateCube(SectionIdx, { length, width, height/20 }, { 0, 0, (height/2) + (height/200) + (height/40) });
+		GenerateCylinder(SectionIdx, length/2, width, 32, { 0, 0, (height/2) + (height/200) + (height/20) });
+		GenerateSemiCircle(SectionIdx, length/2, 1, { 0, -width/2, (height/2) + (height/200) + (height/20) });
+		GenerateSemiCircle(SectionIdx, length/2, 0, { 0, width/2, (height/2) + (height/200) + (height/20) });
+		GenerateSideCurvedTriangleLeft(SectionIdx, length/2, width, 32, { 0, 0, (height/2) + (height/200) + (height/20) });
+		GenerateSideCurvedTriangleRight(SectionIdx, length/2, width, 32, { 0, 0, (height/2) + (height/200) + (height/20) });
 		break;
 	case ERailingType::PyramidTop:
-		GenerateCube(SectionIdx, { 10, 10, 1 }, { 0, 0, 100.5 });
-		GenerateCube(SectionIdx, { 15, 15, 10 }, { 0, 0, 106 });
-		GeneratePyramid(SectionIdx, {15, 15, 10}, {0, 0, 116});
+		GenerateCube(SectionIdx, { (length * 2) / 3, (width * 2) / 3, height / 200 }, { 0, 0, (height / 2) + (height / 400) });
+		GenerateCube(SectionIdx, { length, width, height/20 }, { 0, 0, (height/2) + (height/200) + (height/40)});
+		GeneratePyramid(SectionIdx, {length, width, height/20}, {0, 0, (height/2) + (height/200) + (height/20) + (height/40)});
 		break;
 	}
 	SectionIdx = 0;
