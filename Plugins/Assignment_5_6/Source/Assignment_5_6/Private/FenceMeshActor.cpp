@@ -145,8 +145,17 @@ void AFenceMeshActor::GenerateProceduralMesh()
 			FVector Location = MeshComponent->GetComponentLocation();
 			FRotator Rotation = MeshComponent->GetComponentRotation();
 			auto SpawnedRail = GetWorld()->SpawnActor<AVerticalRailActor>(VerticalRailClassRef, Location, Rotation, Params);
-			SpawnedRail->GenerateFenceRailing(FenceProperties.length, FenceProperties.width, FenceProperties.height);
-			SpawnedRail->RegisterAllComponents();
+			if(SpawnedRail) {
+				SpawnedRail->GenerateFenceRailing(FenceProperties.length, FenceProperties.width, FenceProperties.height);
+				SpawnedRail->RegisterAllComponents();
+
+				if (VerticalRailMaterial) {
+					UStaticMeshComponent* VerticalRailMeshComponent = SpawnedRail->FindComponentByClass<UStaticMeshComponent>();
+					if (VerticalRailMeshComponent) {
+						VerticalRailMeshComponent->SetMaterial(0, VerticalRailMaterial);
+					}
+				}
+			}
 		}
 		MeshComponent->DestroyComponent();
 	}
@@ -162,11 +171,20 @@ void AFenceMeshActor::GenerateProceduralMesh()
 		FVector Location = H_MeshComponent->GetComponentLocation();
 		FRotator Rotation = H_MeshComponent->GetComponentRotation();
 		auto HorizontalRail = GetWorld()->SpawnActor<AVerticalRailActor>(AVerticalRailActor::StaticClass(), Location, Rotation, Params);
-		if (HorizontalMeshLengthArr[index]) {
-			HorizontalRail->GenerateFenceRailing(HorizontalMeshLengthArr[index], FenceProperties.width / 2, FenceProperties.height * 0.075);
-			index++;
+		if(HorizontalRail) {
+			if (HorizontalMeshLengthArr[index]) {
+				HorizontalRail->GenerateFenceRailing(HorizontalMeshLengthArr[index], FenceProperties.width / 2, FenceProperties.height * 0.075);
+				index++;
+			}
+			HorizontalRail->RegisterAllComponents();
+
+			if (HorizontalRailMaterial) {
+				UStaticMeshComponent* HorizontalRailMeshComponent = HorizontalRail->FindComponentByClass<UStaticMeshComponent>();
+				if (HorizontalRailMeshComponent) {
+					HorizontalRailMeshComponent->SetMaterial(0, VerticalRailMaterial);
+				}
+			}
 		}
-		HorizontalRail->RegisterAllComponents();
 		H_MeshComponent->DestroyComponent();
 	}
 	H_StaticMeshComponentArr.Empty();

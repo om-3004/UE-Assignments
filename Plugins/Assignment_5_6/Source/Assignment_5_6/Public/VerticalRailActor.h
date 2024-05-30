@@ -107,9 +107,6 @@ public:
 	void GeneratePyramid(int32& SectionIndex, const FVector& Dimensions, const FVector& LocationOffset);
 
 	UFUNCTION(BlueprintCallable, Category = "Defaults")
-	void GenerateHemiSphere(int32& SectionIndex, const float& Radius, const int32& RingCount, const int32& PointCount, const FVector& LocationOffset);
-
-	UFUNCTION(BlueprintCallable, Category = "Defaults")
 	void GenerateCylinder(int32& SectionIndex, const float& Radius, const float& Height, const int32& Segments, const FVector& LocationOffset);
 
 	UFUNCTION(BlueprintCallable, Category = "Defaults")

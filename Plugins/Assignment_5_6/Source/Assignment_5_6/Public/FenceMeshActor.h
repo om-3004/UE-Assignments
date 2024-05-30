@@ -53,8 +53,11 @@ class ASSIGNMENT_5_6_API AFenceMeshActor : public AActor
 	UPROPERTY()
 	bool isProceduralMesh;
 
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true" ,ClampMin = 0 , UIMin = 0), Category = "Fence Modificaiton")
-	int32 NoOfSplinePoints;*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true" ,ClampMin = 0 , UIMin = 0), Category = "Fence Modificaiton")
+	UMaterialInterface* VerticalRailMaterial;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true" ,ClampMin = 0 , UIMin = 0), Category = "Fence Modificaiton")
+	UMaterialInterface* HorizontalRailMaterial;
 
 	UPROPERTY(EditAnywhere,meta = (AllowPrivateAccess = "true"), Category = "Fence Modificaiton")
 	UStaticMesh* StaticMesh;
