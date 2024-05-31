@@ -364,17 +364,35 @@ void AVerticalRailActor::GenerateCubePyramid(int32& SectionIndex, const FVector&
 		AddUV(FVector2D{ 1.0, 0.0 });
 	}
 
-	Normals.Add({ 0.0, 0.0, -1.0 });
-	Normals.Add({ -1.0, 0.0, 0.0 });
-	Normals.Add({ 1.0, 0.0, 0.0 });
-	Normals.Add({ 0.0, -1.0, 0.0 });
-	Normals.Add({ 0.0, 1.0, 0.0 });
-
-	Normals.Add(FVector::CrossProduct(Vertices[20], Vertices[21]));
-	Normals.Add(FVector::CrossProduct(Vertices[23], Vertices[24]));
-	
-	Normals.Add(FVector::CrossProduct(Vertices[26], Vertices[27]));
-	Normals.Add(FVector::CrossProduct(Vertices[30], Vertices[31]));
+	for (int32 i = 0; i < Vertices.Num(); i++) {
+		if (i >= 0 && i <= 3) {
+			Normals.Add({ 0.0, 0.0, -1.0 });
+		}
+		else if (i >= 4 && i <= 7) {
+			Normals.Add({ 0.0, -1.0, 0.0 });
+		}
+		else if (i >= 8 && i <= 11) {
+			Normals.Add({ 0.0, 1.0, 0.0 });
+		}
+		else if (i >= 12 && i <= 15) {
+			Normals.Add({ 1.0, 0.0, 0.0 });
+		}
+		else if (i >= 16 && i <= 19) {
+			Normals.Add({ -1.0, 0.0, 0.0 });
+		}
+		else if (i >= 20 && i <= 22) {
+			Normals.Add({ 0.0, -1.0, 0.0 });
+		}
+		else if (i >= 23 && i <= 25) {
+			Normals.Add({ 0.0, 1.0, 0.0 });
+		}
+		else if (i >= 26 && i <= 29) {
+			Normals.Add(FVector::CrossProduct(Vertices[26] - Vertices[27], Vertices[28] - Vertices[26]));
+		}
+		else {
+			Normals.Add(FVector::CrossProduct(Vertices[30] - Vertices[31], Vertices[32] - Vertices[30]));
+		}
+	}
 
 	ProceduralMeshComponent->CreateMeshSection_LinearColor(SectionIndex++, Vertices, Triangles, Normals, UVs, Colors, Tangents, true);
 }
@@ -1388,4 +1406,21 @@ void AVerticalRailActor::GenerateSideCurvedTriangleRight(int32& SectionIndex, co
 
 	// Add the mesh to the procedural mesh component
 	ProceduralMeshComponent->CreateMeshSection_LinearColor(SectionIndex++, Vertices, Triangles, Normals, UVs, Colors, Tangents, true);
+}
+
+void AVerticalRailActor::SetVerticalMaterial(int32 index, UMaterialInstanceDynamic* Material)
+{
+	ProceduralMeshComponent->SetMaterial(index++, Material);
+	ProceduralMeshComponent->SetMaterial(index++, Material);
+	ProceduralMeshComponent->SetMaterial(index++, Material);
+	ProceduralMeshComponent->SetMaterial(index++, Material);
+	ProceduralMeshComponent->SetMaterial(index++, Material);
+	ProceduralMeshComponent->SetMaterial(index++, Material);
+	ProceduralMeshComponent->SetMaterial(index++, Material);
+	ProceduralMeshComponent->SetMaterial(index++, Material);
+}
+
+void AVerticalRailActor::SetHorizontalMaterial(UMaterialInstanceDynamic* Material)
+{
+	ProceduralMeshComponent->SetMaterial(0, Material);
 }

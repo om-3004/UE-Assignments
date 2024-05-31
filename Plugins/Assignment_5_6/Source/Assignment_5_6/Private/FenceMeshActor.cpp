@@ -9,7 +9,6 @@ AFenceMeshActor::AFenceMeshActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	isProceduralMesh = false;
 
 	SceneComponent = CreateDefaultSubobject<USceneComponent>("SceneComponent");
 	RootComponent = SceneComponent;
@@ -73,18 +72,27 @@ void AFenceMeshActor::GenerateStaticFence()
 	}
 
 	const float LengthOfStatticFenceMesh = FenceProperties.length + FenceProperties.spacing;
-	const float NoOfStaticFences = SplineLength / LengthOfStatticFenceMesh;
+	NoOfStaticFences = SplineLength / LengthOfStatticFenceMesh;
 
 	for (int index{}; index < NoOfStaticFences; ++index) {
-		const FVector Location = SplineComponent->GetLocationAtDistanceAlongSpline(index * LengthOfStatticFenceMesh, ESplineCoordinateSpace::World);
-		const FRotator Rotation = SplineComponent->GetRotationAtDistanceAlongSpline(LengthOfStatticFenceMesh * index, ESplineCoordinateSpace::World);
+		const FVector Location = SplineComponent->GetLocationAtDistanceAlongSpline(index * LengthOfStatticFenceMesh, ESplineCoordinateSpace::Local);
+		const FRotator Rotation = SplineComponent->GetRotationAtDistanceAlongSpline(LengthOfStatticFenceMesh * index, ESplineCoordinateSpace::Local);
 
 		UStaticMeshComponent* VerticalStaticMesh = NewObject<UStaticMeshComponent>(this);
-		VerticalStaticMesh->AttachToComponent(SplineComponent, FAttachmentTransformRules::KeepWorldTransform);
-		VerticalStaticMesh->SetWorldLocationAndRotation(Location, Rotation);
+		VerticalStaticMesh->AttachToComponent(SplineComponent, FAttachmentTransformRules::KeepRelativeTransform);
+		VerticalStaticMesh->SetRelativeLocationAndRotation(Location, Rotation);
 		VerticalStaticMesh->SetStaticMesh(StaticMesh);
-		VerticalStaticMesh->SetWorldScale3D(FVector(FenceProperties.length / 15, FenceProperties.width / 15, FenceProperties.height / 200));
+		VerticalStaticMesh->SetRelativeScale3D(FVector(FenceProperties.length / 15, FenceProperties.width / 15, FenceProperties.height / 200));
 		VerticalStaticMesh->RegisterComponent();
+
+		UMaterialInstanceDynamic* VerticalDynamicMaterial = UMaterialInstanceDynamic::Create(VerticalRailMaterial, this);
+		if (VerticalDynamicMaterial) {
+			float TileX = (FenceProperties.length + FenceProperties.width) / 20.0f;
+			float TileY = FenceProperties.height / 50.0f;
+			VerticalDynamicMaterial->SetScalarParameterValue("TileX", TileX);
+			VerticalDynamicMaterial->SetScalarParameterValue("TileY", TileY);
+			VerticalStaticMesh->SetMaterial(0, VerticalDynamicMaterial);
+		}
 
 		VerticalStaticMeshComponentArr.Add(VerticalStaticMesh);
 	}
@@ -92,45 +100,69 @@ void AFenceMeshActor::GenerateStaticFence()
 	for (int index = 0; index < NoOfSplinePoints - 1; index++) {
 		FVector StartLocation;
 		FVector StartTangent;
-		SplineComponent->GetLocationAndTangentAtSplinePoint(index, StartLocation, StartTangent, ESplineCoordinateSpace::World);
+		SplineComponent->GetLocationAndTangentAtSplinePoint(index, StartLocation, StartTangent, ESplineCoordinateSpace::Local);
 
 		FVector EndLocation;
 		FVector EndTangent;
-		SplineComponent->GetLocationAndTangentAtSplinePoint(index + 1, EndLocation, EndTangent, ESplineCoordinateSpace::World);
-
-		FRotator RotationAt = SplineComponent->GetRotationAtSplinePoint(index, ESplineCoordinateSpace::World);
+		SplineComponent->GetLocationAndTangentAtSplinePoint(index + 1, EndLocation, EndTangent, ESplineCoordinateSpace::Local);
 
 		float LengthBetweenPoints = FVector::Dist(StartLocation, EndLocation);
 		float HorizontalMeshLength = LengthOfStatticFenceMesh * (int(LengthBetweenPoints / LengthOfStatticFenceMesh) + 1);
 		HorizontalMeshLengthArr.Add(HorizontalMeshLength);
 		HorizontalMeshLengthArr.Add(HorizontalMeshLength);
 
-		FVector MiddleVec = (EndLocation + StartLocation) / 2;
+		FRotator RotationInBetween = SplineComponent->GetRotationAtSplinePoint(index, ESplineCoordinateSpace::Local);
+		FQuat RotationQuat = FQuat(RotationInBetween);
 
-		FVector DirectionVec = EndLocation - StartLocation;
-		FVector LeftSide = FVector::CrossProduct(DirectionVec, FVector::DownVector).GetSafeNormal();
-		LeftSide *= FenceProperties.width / 2 + FenceProperties.width / 4;
-		MiddleVec += LeftSide;
+		FVector UpDirectionVector = RotationQuat.RotateVector(FVector::UpVector);
+		FVector ForwardDirectionVector = (EndLocation - StartLocation).GetSafeNormal();
+		FVector LeftDirectionVector = FVector::CrossProduct(ForwardDirectionVector, UpDirectionVector);
+		FVector DownDirectionVector = FVector::CrossProduct(ForwardDirectionVector, LeftDirectionVector);
+		FVector RightDirectionVector = FVector::CrossProduct(ForwardDirectionVector, DownDirectionVector);
+
+		FVector LeftOffset = LeftDirectionVector * (FenceProperties.width / 2 + FenceProperties.width / 4);
+		FVector UpOffset = UpDirectionVector * (FenceProperties.height / 4);
+		FVector DownOffset = DownDirectionVector * (FenceProperties.height / 4);
+		FVector ForwardOffset = ForwardDirectionVector * ((HorizontalMeshLength / 2) - (LengthOfStatticFenceMesh/2));
+
+		FVector HFenceLocation1 = StartLocation + LeftOffset + UpOffset + ForwardOffset;
+		FVector HFenceLocation2 = StartLocation + LeftOffset + DownOffset + ForwardOffset;
 
 		UStaticMeshComponent* HorizontalFence_1 = NewObject<UStaticMeshComponent>(this);
 		HorizontalFence_1->RegisterComponent();
-		HorizontalFence_1->SetWorldScale3D(FVector(HorizontalMeshLength, FenceProperties.width / 2, FenceProperties.height * 0.075) / 100);
+		HorizontalFence_1->SetRelativeScale3D(FVector(HorizontalMeshLength, FenceProperties.width / 2, FenceProperties.height * 0.075) / 100);
 		HorizontalFence_1->AttachToComponent(SplineComponent, FAttachmentTransformRules::KeepRelativeTransform);
-		HorizontalFence_1->SetWorldLocation(FVector(MiddleVec.X, MiddleVec.Y, MiddleVec.Z + FenceProperties.height / 4));
-		HorizontalFence_1->SetWorldRotation(RotationAt);
+		HorizontalFence_1->SetRelativeLocation(HFenceLocation1);
+		HorizontalFence_1->SetRelativeRotation(RotationInBetween);
 		HorizontalFence_1->SetStaticMesh(HorizontalFenceStaticMesh);
-		HorizontalFence_1->AddLocalOffset(FVector(-FenceProperties.spacing / 2, 0, 0));
 		H_StaticMeshComponentArr.Add(HorizontalFence_1);
+
+		UMaterialInstanceDynamic* HorizontalDynamicMaterial = UMaterialInstanceDynamic::Create(HorizontalRailMaterial, this);
+
+		if (HorizontalDynamicMaterial) {
+			float TileX = HorizontalMeshLength / (NoOfStaticFences * 4);
+			float TileY = (FenceProperties.length + FenceProperties.width) / 20.0f;
+			HorizontalDynamicMaterial->SetScalarParameterValue("TileX", TileX);
+			HorizontalDynamicMaterial->SetScalarParameterValue("TileY", TileY);
+			HorizontalFence_1->SetMaterial(0, HorizontalDynamicMaterial);
+		}
 
 		UStaticMeshComponent* HorizontalFence_2 = NewObject<UStaticMeshComponent>(this);
 		HorizontalFence_2->RegisterComponent();
-		HorizontalFence_2->SetWorldScale3D(FVector(HorizontalMeshLength, FenceProperties.width / 2, FenceProperties.height * 0.075) / 100);
+		HorizontalFence_2->SetRelativeScale3D(FVector(HorizontalMeshLength, FenceProperties.width / 2, FenceProperties.height * 0.075) / 100);
 		HorizontalFence_2->AttachToComponent(SplineComponent, FAttachmentTransformRules::KeepRelativeTransform);
-		HorizontalFence_2->SetWorldLocation(FVector(MiddleVec.X, MiddleVec.Y, MiddleVec.Z - (FenceProperties.height / 4)));
-		HorizontalFence_2->SetWorldRotation(RotationAt);
+		HorizontalFence_2->SetRelativeLocation(HFenceLocation2);
+		HorizontalFence_2->SetRelativeRotation(RotationInBetween);
 		HorizontalFence_2->SetStaticMesh(HorizontalFenceStaticMesh);
-		HorizontalFence_2->AddLocalOffset(FVector(-FenceProperties.spacing / 2, 0, 0));
 		H_StaticMeshComponentArr.Add(HorizontalFence_2);
+
+		if (HorizontalDynamicMaterial) {
+			float TileX = HorizontalMeshLength / (NoOfStaticFences * 4);
+			float TileY = (FenceProperties.length + FenceProperties.width) / 20.0f;
+			HorizontalDynamicMaterial->SetScalarParameterValue("TileX", TileX);
+			HorizontalDynamicMaterial->SetScalarParameterValue("TileY", TileY);
+			HorizontalFence_2->SetMaterial(0, HorizontalDynamicMaterial);
+		}
 	}
 }
 
@@ -145,16 +177,16 @@ void AFenceMeshActor::GenerateProceduralMesh()
 			FVector Location = MeshComponent->GetComponentLocation();
 			FRotator Rotation = MeshComponent->GetComponentRotation();
 			auto SpawnedRail = GetWorld()->SpawnActor<AVerticalRailActor>(VerticalRailClassRef, Location, Rotation, Params);
-			if(SpawnedRail) {
-				SpawnedRail->GenerateFenceRailing(FenceProperties.length, FenceProperties.width, FenceProperties.height);
-				SpawnedRail->RegisterAllComponents();
+			SpawnedRail->GenerateFenceRailing(FenceProperties.length, FenceProperties.width, FenceProperties.height);
+			SpawnedRail->RegisterAllComponents();
 
-				if (VerticalRailMaterial) {
-					UStaticMeshComponent* VerticalRailMeshComponent = SpawnedRail->FindComponentByClass<UStaticMeshComponent>();
-					if (VerticalRailMeshComponent) {
-						VerticalRailMeshComponent->SetMaterial(0, VerticalRailMaterial);
-					}
-				}
+			UMaterialInstanceDynamic* VerticalDynamicMaterial = UMaterialInstanceDynamic::Create(VerticalRailMaterial, this);
+			if (VerticalDynamicMaterial) {
+				float TileX = FenceProperties.length / 10.0f;
+				float TileY = FenceProperties.height / 50.0f;
+				VerticalDynamicMaterial->SetScalarParameterValue("TileX", TileX);
+				VerticalDynamicMaterial->SetScalarParameterValue("TileY", TileY);
+				SpawnedRail->SetVerticalMaterial(0, VerticalDynamicMaterial);
 			}
 		}
 		MeshComponent->DestroyComponent();
@@ -171,22 +203,23 @@ void AFenceMeshActor::GenerateProceduralMesh()
 		FVector Location = H_MeshComponent->GetComponentLocation();
 		FRotator Rotation = H_MeshComponent->GetComponentRotation();
 		auto HorizontalRail = GetWorld()->SpawnActor<AVerticalRailActor>(AVerticalRailActor::StaticClass(), Location, Rotation, Params);
-		if(HorizontalRail) {
-			if (HorizontalMeshLengthArr[index]) {
-				HorizontalRail->GenerateFenceRailing(HorizontalMeshLengthArr[index], FenceProperties.width / 2, FenceProperties.height * 0.075);
-				index++;
-			}
-			HorizontalRail->RegisterAllComponents();
-
-			if (HorizontalRailMaterial) {
-				UStaticMeshComponent* HorizontalRailMeshComponent = HorizontalRail->FindComponentByClass<UStaticMeshComponent>();
-				if (HorizontalRailMeshComponent) {
-					HorizontalRailMeshComponent->SetMaterial(0, VerticalRailMaterial);
-				}
-			}
+		if (HorizontalMeshLengthArr[index]) {
+			HorizontalRail->GenerateFenceRailing(HorizontalMeshLengthArr[index], FenceProperties.width / 2, FenceProperties.height * 0.075);
 		}
+
+		UMaterialInstanceDynamic* HorizontalDynamicMaterial = UMaterialInstanceDynamic::Create(HorizontalRailMaterial, this);
+		if (HorizontalDynamicMaterial) {
+			float TileX = HorizontalMeshLengthArr[index] / (NoOfStaticFences * 4);
+			float TileY = (FenceProperties.length + FenceProperties.width) / 20.0f;
+			HorizontalDynamicMaterial->SetScalarParameterValue("TileX", TileX);
+			HorizontalDynamicMaterial->SetScalarParameterValue("TileY", TileY);
+			HorizontalRail->SetHorizontalMaterial(HorizontalDynamicMaterial);
+		}
+
+		HorizontalRail->RegisterAllComponents();
 		H_MeshComponent->DestroyComponent();
 	}
 	H_StaticMeshComponentArr.Empty();
 	HorizontalMeshLengthArr.Empty();
+	index++;
 }

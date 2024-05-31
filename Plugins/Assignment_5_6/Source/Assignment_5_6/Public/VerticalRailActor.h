@@ -117,4 +117,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Defaults")
 	void GenerateSideCurvedTriangleRight(int32& SectionIndex, const float& Radius, const float& Height, const int32& Segments, const FVector& LocationOffset);
+
+	UFUNCTION()
+	void SetVerticalMaterial(int32 index, UMaterialInstanceDynamic* Material);
+
+	UFUNCTION()
+	void SetHorizontalMaterial(UMaterialInstanceDynamic* Material);
 };

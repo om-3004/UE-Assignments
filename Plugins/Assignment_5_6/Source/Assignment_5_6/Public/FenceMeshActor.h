@@ -31,6 +31,12 @@ UCLASS()
 class ASSIGNMENT_5_6_API AFenceMeshActor : public AActor
 {
 	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Fence Modificaiton")
+	UMaterialInstance* VerticalRailMaterial;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Fence Modificaiton")
+	UMaterialInstance* HorizontalRailMaterial;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Fence Modificaiton")
 	FFenceProperties FenceProperties;
@@ -50,20 +56,14 @@ class ASSIGNMENT_5_6_API AFenceMeshActor : public AActor
 	UPROPERTY()
 	TArray<float> HorizontalMeshLengthArr;
 
-	UPROPERTY()
-	bool isProceduralMesh;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true" ,ClampMin = 0 , UIMin = 0), Category = "Fence Modificaiton")
-	UMaterialInterface* VerticalRailMaterial;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true" ,ClampMin = 0 , UIMin = 0), Category = "Fence Modificaiton")
-	UMaterialInterface* HorizontalRailMaterial;
-
 	UPROPERTY(EditAnywhere,meta = (AllowPrivateAccess = "true"), Category = "Fence Modificaiton")
 	UStaticMesh* StaticMesh;
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Fence Modificaiton")
 	UStaticMesh* HorizontalFenceStaticMesh;
+
+	UPROPERTY()
+	float NoOfStaticFences;
 
 protected:
 	// Called when the game starts or when spawned
