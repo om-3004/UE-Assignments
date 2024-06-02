@@ -81,17 +81,50 @@ void AFenceMeshActor::GenerateStaticFence()
 		UStaticMeshComponent* VerticalStaticMesh = NewObject<UStaticMeshComponent>(this);
 		VerticalStaticMesh->AttachToComponent(SplineComponent, FAttachmentTransformRules::KeepRelativeTransform);
 		VerticalStaticMesh->SetRelativeLocationAndRotation(Location, Rotation);
-		VerticalStaticMesh->SetStaticMesh(StaticMesh);
+		VerticalStaticMesh->SetStaticMesh(VerticalFenceStaticMesh);
 		VerticalStaticMesh->SetRelativeScale3D(FVector(FenceProperties.length / 15, FenceProperties.width / 15, FenceProperties.height / 200));
 		VerticalStaticMesh->RegisterComponent();
 
-		UMaterialInstanceDynamic* VerticalDynamicMaterial = UMaterialInstanceDynamic::Create(VerticalRailMaterial, this);
-		if (VerticalDynamicMaterial) {
-			float TileX = (FenceProperties.length + FenceProperties.width) / 20.0f;
-			float TileY = FenceProperties.height / 50.0f;
-			VerticalDynamicMaterial->SetScalarParameterValue("TileX", TileX);
-			VerticalDynamicMaterial->SetScalarParameterValue("TileY", TileY);
-			VerticalStaticMesh->SetMaterial(0, VerticalDynamicMaterial);
+		UMaterialInstanceDynamic* VerticalDynamicMaterial0 = UMaterialInstanceDynamic::Create(VerticalRailMaterial0, this);
+		UMaterialInstanceDynamic* VerticalDynamicMaterial1 = UMaterialInstanceDynamic::Create(VerticalRailMaterial1, this);
+		UMaterialInstanceDynamic* VerticalDynamicMaterial2 = UMaterialInstanceDynamic::Create(VerticalRailMaterial2, this);
+		UMaterialInstanceDynamic* VerticalDynamicMaterial3 = UMaterialInstanceDynamic::Create(VerticalRailMaterial3, this);
+		UMaterialInstanceDynamic* VerticalDynamicMaterial4 = UMaterialInstanceDynamic::Create(VerticalRailMaterial4, this);
+
+		if (VerticalDynamicMaterial0) {
+			float TileX = (FenceProperties.length + FenceProperties.width) / 20.0f; // 1.5
+			float TileY = FenceProperties.height / 50.0f; // 4
+			VerticalDynamicMaterial0->SetScalarParameterValue("TileX", TileX);
+			VerticalDynamicMaterial0->SetScalarParameterValue("TileY", TileY);
+			VerticalStaticMesh->SetMaterial(0, VerticalDynamicMaterial0);
+		}
+		if (VerticalDynamicMaterial1) {
+			float TileX = (FenceProperties.length + FenceProperties.width) / 20.0f; // 1.5
+			float TileY = FenceProperties.height / 400.0f; // 0.5
+			VerticalDynamicMaterial1->SetScalarParameterValue("TileX", TileX);
+			VerticalDynamicMaterial1->SetScalarParameterValue("TileY", TileY);
+			VerticalStaticMesh->SetMaterial(1, VerticalDynamicMaterial1);
+		}
+		if (VerticalDynamicMaterial2) {
+			float TileX = (FenceProperties.length + FenceProperties.width) / 15.0f; // 2
+			float TileY = FenceProperties.height / 100.0f; // 2
+			VerticalDynamicMaterial2->SetScalarParameterValue("TileX", TileX);
+			VerticalDynamicMaterial2->SetScalarParameterValue("TileY", TileY);
+			VerticalStaticMesh->SetMaterial(2, VerticalDynamicMaterial2);
+		}
+		if (VerticalDynamicMaterial3) {
+			float TileX = (FenceProperties.length + FenceProperties.width) / 15.0f; // 2
+			float TileY = FenceProperties.height / 100.0f; // 2
+			VerticalDynamicMaterial3->SetScalarParameterValue("TileX", TileX);
+			VerticalDynamicMaterial3->SetScalarParameterValue("TileY", TileY);
+			VerticalStaticMesh->SetMaterial(3, VerticalDynamicMaterial3);
+		}
+		if (VerticalDynamicMaterial4) {
+			float TileX = (FenceProperties.length + FenceProperties.width) / 30.0f; // 1
+			float TileY = FenceProperties.height / 400.0f; // 0.5
+			VerticalDynamicMaterial4->SetScalarParameterValue("TileX", TileX);
+			VerticalDynamicMaterial4->SetScalarParameterValue("TileY", TileY);
+			VerticalStaticMesh->SetMaterial(4, VerticalDynamicMaterial4);
 		}
 
 		VerticalStaticMeshComponentArr.Add(VerticalStaticMesh);
@@ -180,13 +213,89 @@ void AFenceMeshActor::GenerateProceduralMesh()
 			SpawnedRail->GenerateFenceRailing(FenceProperties.length, FenceProperties.width, FenceProperties.height);
 			SpawnedRail->RegisterAllComponents();
 
-			UMaterialInstanceDynamic* VerticalDynamicMaterial = UMaterialInstanceDynamic::Create(VerticalRailMaterial, this);
-			if (VerticalDynamicMaterial) {
-				float TileX = FenceProperties.length / 10.0f;
-				float TileY = FenceProperties.height / 50.0f;
-				VerticalDynamicMaterial->SetScalarParameterValue("TileX", TileX);
-				VerticalDynamicMaterial->SetScalarParameterValue("TileY", TileY);
-				SpawnedRail->SetVerticalMaterial(0, VerticalDynamicMaterial);
+			UMaterialInstanceDynamic* VerticalDynamicMaterial0 = UMaterialInstanceDynamic::Create(VerticalRailMaterial0, this);
+			UMaterialInstanceDynamic* VerticalDynamicMaterial1 = UMaterialInstanceDynamic::Create(VerticalRailMaterial1, this);
+			UMaterialInstanceDynamic* VerticalDynamicMaterial2 = UMaterialInstanceDynamic::Create(VerticalRailMaterial2, this);
+			UMaterialInstanceDynamic* VerticalDynamicMaterial3 = UMaterialInstanceDynamic::Create(VerticalRailMaterial3, this);
+			UMaterialInstanceDynamic* VerticalDynamicMaterial4 = UMaterialInstanceDynamic::Create(VerticalRailMaterial4, this);
+
+			if (VerticalDynamicMaterial0) {
+				float TileX = (FenceProperties.length * FenceProperties.width) / 20.0f; // 1.5
+				float TileY = FenceProperties.height / 50.0f; // 4
+				VerticalDynamicMaterial0->SetScalarParameterValue("TileX", TileX);
+				VerticalDynamicMaterial0->SetScalarParameterValue("TileY", TileY);
+				SpawnedRail->ProceduralMeshComponent->SetMaterial(0, VerticalDynamicMaterial0);
+			}
+			if (VerticalDynamicMaterial1) {
+				float TileX = (FenceProperties.length * FenceProperties.width) / 20.0f; // 1.5
+				float TileY = FenceProperties.height / 400.0f; // 0.5
+				VerticalDynamicMaterial1->SetScalarParameterValue("TileX", TileX);
+				VerticalDynamicMaterial1->SetScalarParameterValue("TileY", TileY);
+				SpawnedRail->ProceduralMeshComponent->SetMaterial(1, VerticalDynamicMaterial1);
+			}
+			if (VerticalDynamicMaterial2) {
+				float TileX = (FenceProperties.length + FenceProperties.width) / 15.0f; // 2
+				float TileY = FenceProperties.height / 400.0f; // 0.5
+				VerticalDynamicMaterial2->SetScalarParameterValue("TileX", TileX);
+				VerticalDynamicMaterial2->SetScalarParameterValue("TileY", TileY);
+				SpawnedRail->ProceduralMeshComponent->SetMaterial(2, VerticalDynamicMaterial2);
+			}
+
+			if (SpawnedRail->Railing == ERailingType::GothicStarTop) {
+				if (VerticalDynamicMaterial3) {
+					float TileX = (FenceProperties.length + FenceProperties.width) / 15.0f; // 2
+					float TileY = FenceProperties.height / 100.0f; // 2
+					VerticalDynamicMaterial3->SetScalarParameterValue("TileX", TileX);
+					VerticalDynamicMaterial3->SetScalarParameterValue("TileY", TileY);
+					SpawnedRail->ProceduralMeshComponent->SetMaterial(3, VerticalDynamicMaterial3);
+					SpawnedRail->ProceduralMeshComponent->SetMaterial(4, VerticalDynamicMaterial3);
+				}
+			}
+			else if (SpawnedRail->Railing == ERailingType::RoundedOverTop) {
+				if (VerticalDynamicMaterial3) {
+					float TileX = (FenceProperties.length + FenceProperties.width) / 15.0f; // 2
+					float TileY = FenceProperties.height / 100.0f; // 2
+					VerticalDynamicMaterial3->SetScalarParameterValue("TileX", TileX);
+					VerticalDynamicMaterial3->SetScalarParameterValue("TileY", TileY);
+					SpawnedRail->ProceduralMeshComponent->SetMaterial(3, VerticalDynamicMaterial2);
+					SpawnedRail->ProceduralMeshComponent->SetMaterial(4, VerticalDynamicMaterial2);
+					SpawnedRail->ProceduralMeshComponent->SetMaterial(5, VerticalDynamicMaterial2);
+				}
+			}
+			else if (SpawnedRail->Railing == ERailingType::RoundedStarTop) {
+				if (VerticalDynamicMaterial2) {
+					float TileX = (FenceProperties.length + FenceProperties.width) / 15.0f; // 2
+					float TileY = FenceProperties.height / 400.0f; // 0.5
+					VerticalDynamicMaterial2->SetScalarParameterValue("TileX", TileX);
+					VerticalDynamicMaterial2->SetScalarParameterValue("TileY", TileY);
+					SpawnedRail->ProceduralMeshComponent->SetMaterial(3, VerticalDynamicMaterial2);
+					SpawnedRail->ProceduralMeshComponent->SetMaterial(4, VerticalDynamicMaterial2);
+					SpawnedRail->ProceduralMeshComponent->SetMaterial(5, VerticalDynamicMaterial2);
+				}
+				if (VerticalDynamicMaterial3) {
+					float TileX = (FenceProperties.length + FenceProperties.width) / 15.0f; // 2
+					float TileY = FenceProperties.height / 100.0f; // 2
+					VerticalDynamicMaterial3->SetScalarParameterValue("TileX", TileX);
+					VerticalDynamicMaterial3->SetScalarParameterValue("TileY", TileY);
+					SpawnedRail->ProceduralMeshComponent->SetMaterial(6, VerticalDynamicMaterial3);
+					SpawnedRail->ProceduralMeshComponent->SetMaterial(7, VerticalDynamicMaterial3);
+				}
+			}
+			else {
+				if (VerticalDynamicMaterial3) {
+					float TileX = (FenceProperties.length + FenceProperties.width) / 15.0f; // 2
+					float TileY = FenceProperties.height / 100.0f; // 2
+					VerticalDynamicMaterial3->SetScalarParameterValue("TileX", TileX);
+					VerticalDynamicMaterial3->SetScalarParameterValue("TileY", TileY);
+					SpawnedRail->ProceduralMeshComponent->SetMaterial(3, VerticalDynamicMaterial3);
+				}
+				if (VerticalDynamicMaterial4) {
+					float TileX = (FenceProperties.length + FenceProperties.width) / 30.0f; // 1
+					float TileY = FenceProperties.height / 400.0f; // 0.5
+					VerticalDynamicMaterial4->SetScalarParameterValue("TileX", TileX);
+					VerticalDynamicMaterial4->SetScalarParameterValue("TileY", TileY);
+					SpawnedRail->ProceduralMeshComponent->SetMaterial(4, VerticalDynamicMaterial4);
+				}
 			}
 		}
 		MeshComponent->DestroyComponent();
@@ -213,7 +322,7 @@ void AFenceMeshActor::GenerateProceduralMesh()
 			float TileY = (FenceProperties.length + FenceProperties.width) / 20.0f;
 			HorizontalDynamicMaterial->SetScalarParameterValue("TileX", TileX);
 			HorizontalDynamicMaterial->SetScalarParameterValue("TileY", TileY);
-			HorizontalRail->SetHorizontalMaterial(HorizontalDynamicMaterial);
+			HorizontalRail->ProceduralMeshComponent->SetMaterial(0, HorizontalRailMaterial);
 		}
 
 		HorizontalRail->RegisterAllComponents();

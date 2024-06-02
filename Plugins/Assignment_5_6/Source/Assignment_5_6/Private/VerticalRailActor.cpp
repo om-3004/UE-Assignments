@@ -1407,20 +1407,3 @@ void AVerticalRailActor::GenerateSideCurvedTriangleRight(int32& SectionIndex, co
 	// Add the mesh to the procedural mesh component
 	ProceduralMeshComponent->CreateMeshSection_LinearColor(SectionIndex++, Vertices, Triangles, Normals, UVs, Colors, Tangents, true);
 }
-
-void AVerticalRailActor::SetVerticalMaterial(int32 index, UMaterialInstanceDynamic* Material)
-{
-	ProceduralMeshComponent->SetMaterial(index++, Material);
-	ProceduralMeshComponent->SetMaterial(index++, Material);
-	ProceduralMeshComponent->SetMaterial(index++, Material);
-	ProceduralMeshComponent->SetMaterial(index++, Material);
-	ProceduralMeshComponent->SetMaterial(index++, Material);
-	ProceduralMeshComponent->SetMaterial(index++, Material);
-	ProceduralMeshComponent->SetMaterial(index++, Material);
-	ProceduralMeshComponent->SetMaterial(index++, Material);
-}
-
-void AVerticalRailActor::SetHorizontalMaterial(UMaterialInstanceDynamic* Material)
-{
-	ProceduralMeshComponent->SetMaterial(0, Material);
-}

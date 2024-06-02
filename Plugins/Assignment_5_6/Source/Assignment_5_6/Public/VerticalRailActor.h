@@ -24,10 +24,12 @@ class ASSIGNMENT_5_6_API AVerticalRailActor : public AActor
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	UProceduralMeshComponent* ProceduralMeshComponent;
 	
 public:	
+
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	UProceduralMeshComponent* ProceduralMeshComponent;
+
 	// Sets default values for this actor's properties
 	AVerticalRailActor();
 
@@ -118,9 +120,4 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Defaults")
 	void GenerateSideCurvedTriangleRight(int32& SectionIndex, const float& Radius, const float& Height, const int32& Segments, const FVector& LocationOffset);
 
-	UFUNCTION()
-	void SetVerticalMaterial(int32 index, UMaterialInstanceDynamic* Material);
-
-	UFUNCTION()
-	void SetHorizontalMaterial(UMaterialInstanceDynamic* Material);
 };

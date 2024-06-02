@@ -33,7 +33,19 @@ class ASSIGNMENT_5_6_API AFenceMeshActor : public AActor
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Fence Modificaiton")
-	UMaterialInstance* VerticalRailMaterial;
+	UMaterialInstance* VerticalRailMaterial0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Fence Modificaiton")
+	UMaterialInstance* VerticalRailMaterial1;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Fence Modificaiton")
+	UMaterialInstance* VerticalRailMaterial2;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Fence Modificaiton")
+	UMaterialInstance* VerticalRailMaterial3;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Fence Modificaiton")
+	UMaterialInstance* VerticalRailMaterial4;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Fence Modificaiton")
 	UMaterialInstance* HorizontalRailMaterial;
@@ -57,7 +69,7 @@ class ASSIGNMENT_5_6_API AFenceMeshActor : public AActor
 	TArray<float> HorizontalMeshLengthArr;
 
 	UPROPERTY(EditAnywhere,meta = (AllowPrivateAccess = "true"), Category = "Fence Modificaiton")
-	UStaticMesh* StaticMesh;
+	UStaticMesh* VerticalFenceStaticMesh;
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Fence Modificaiton")
 	UStaticMesh* HorizontalFenceStaticMesh;
