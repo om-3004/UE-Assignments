@@ -67,7 +67,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
-	int AddNewVertex(const FVector& VertexCordinates);	
+	int AddNewVertex(const FVector& VertexCordinates);
 
 	UFUNCTION()
 	int AddUV(const FVector2D& UVCordinates);
