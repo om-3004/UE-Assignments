@@ -12,6 +12,8 @@ FAsyncMeshGeneratorTask::FAsyncMeshGeneratorTask(AMeshGenerator* InMeshGenerator
 
 void FAsyncMeshGeneratorTask::DoWork()
 {
+	if (!MeshGenerator || !IsValid(MeshGenerator)) return;
+
 	if (MeshGenerator)
 	{
 		if (UMeshDataAsset* MeshDataAsset = MeshGenerator->MeshDataAsset)
@@ -50,10 +52,8 @@ void FAsyncMeshGeneratorTask::DoWork()
 				Transform.SetRotation(FQuat(FRotator(FMath::RandRange(MinRotation, MaxRotation), FMath::RandRange(MinRotation, MaxRotation), FMath::RandRange(MinRotation, MaxRotation))));
 				InstanceTransforms.Add(Transform);
 
-				AsyncTask(ENamedThreads::GameThread, [this, CurrentMesh, InstanceTransforms, Material]()
-				{
-					MeshGenerator->AddInstances(CurrentMesh, InstanceTransforms, Material);
-				});
+				MeshGenerator->AddInstances(CurrentMesh, InstanceTransforms, Material);
+			
 				FPlatformProcess::Sleep(0.01f);
 			}
 		}
