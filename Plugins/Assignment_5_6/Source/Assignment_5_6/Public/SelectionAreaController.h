@@ -10,6 +10,7 @@
 #include "InputAction.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "MeshGenerator.h"
 
 #include "SelectionAreaController.generated.h"
 
@@ -31,6 +32,9 @@ public:
 	UPROPERTY(VisibleDefaultsOnly,Category = "SelectionAreaController")
 	FHitResult HitResult;
 
+	UPROPERTY(VisibleDefaultsOnly,Category = "SelectionAreaController")
+	FVector Location;
+
 	UPROPERTY(EditDefaultsOnly , Category = "SelectionAreaController")
 	TSubclassOf<ASelectionArea> SelectionActorRef;
 
@@ -46,6 +50,12 @@ public:
 	UFUNCTION(BlueprintCallable , Category = "SelectionAreaController")
 	void ChangeScale(const FString& Property , const float& value);
 
+	UPROPERTY(BlueprintReadWrite , Category = "SelectionAreaController")
+	AMeshGenerator* MeshGeneratorActor;
+
+	UPROPERTY(EditDefaultsOnly , Category = "SelectionAreaController")
+	TSubclassOf<AMeshGenerator> MeshGeneratorActorRef;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
@@ -53,6 +63,13 @@ protected:
 
 public:
 	void OnClick();
+
+	UPROPERTY(BlueprintReadWrite, Category = "SelectionAreaController")
 	bool MoveActor{true};
 	
+	UPROPERTY(BlueprintReadWrite, Category = "SelectionAreaController")
+	bool bGenerateMesh{true};
+
+	UFUNCTION(BlueprintCallable, Category = "SelectionAreaController")
+	void GenerateMesh(int32 NoOfMeshes);
 };
