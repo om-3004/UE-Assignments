@@ -13,23 +13,12 @@ AMeshGenerator::AMeshGenerator()
 	RootComponent = SceneComponent;
 }
 
+
 // Called when the game starts or when spawned
 void AMeshGenerator::BeginPlay()
 {
 	Super::BeginPlay();
 	
-}
-
-void AMeshGenerator::BeginDestroy()
-{
-	Super::BeginDestroy();
-
-	if (AsyncMeshGeneratorTask)
-	{
-		AsyncMeshGeneratorTask->EnsureCompletion();
-		delete AsyncMeshGeneratorTask;
-		AsyncMeshGeneratorTask = nullptr;
-	}
 }
 
 // Called every frame
@@ -63,7 +52,6 @@ void AMeshGenerator::AddInstances(UStaticMesh* StaticMesh, const TArray<FTransfo
 {
 	AsyncTask(ENamedThreads::GameThread, [this, StaticMesh, Transforms, Material]()
 		{
-			if (!this || !IsValid(this)) return;
 			UHierarchicalInstancedStaticMeshComponent** HISMCPtr = HISMComponents.Find(StaticMesh);
 			if (HISMCPtr && *HISMCPtr && (*HISMCPtr)->IsValidLowLevel())
 			{
